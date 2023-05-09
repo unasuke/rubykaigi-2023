@@ -1,6 +1,6 @@
-= TODO: スライドのタイトル
+= Ruby Implementation of QUIC: Progress and Challenges
 
-TODO: スライドの説明
+https://rubykaigi.org/2023/presentations/yu_suke1994.html#day2
 
 == 作者向け
 
@@ -16,9 +16,9 @@ TODO: スライドの説明
 
 === インストール
 
-  gem install rabbit-slide--rubykaigi-2023
+  gem install rabbit-slide-unasuke-rubykaigi-2023
 
 === 表示
 
-  rabbit rabbit-slide--rubykaigi-2023.gem
+  rabbit rabbit-slide-unasuke-rubykaigi-2023.gem
 

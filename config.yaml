@@ -1,12 +1,12 @@
 ---
 id: rubykaigi-2023
 base_name: slide
-tags: []
-presentation_date:
+tags: ['ruby', 'python', 'rubykaigi', 'quic']
+presentation_date: '2023-05-12'
 presentation_start_time:
 presentation_end_time:
 version: 1.0.0
-licenses: []
+licenses: ['MIT']
 slideshare_id:
 speaker_deck_id:
 vimeo_id:
@@ -15,8 +15,9 @@ width: 1920
 height: 1080
 author:
   markup_language: :rd
-  name:
-  email:
-  rubygems_user:
+  name: unasuke
+  email: yusuke1994525@gmail.com
+  rubygems_user: unasuke
   slideshare_user:
   speaker_deck_user:
+source_code_url: https://github.com/unasuke/rubykaigi-2023
