@@ -1,32 +1,440 @@
-= タイトル
+= Ruby Implementation of QUIC: Progress and Challenges
 
-# : subtitle
-#    サブタイトル
-# : author
-#    作者
-# : institution
-#    所属
-# : content-source
-#    イベント名
-# : date
-#    2023-05-06
-# : allotted-time
-#    5m
-# : start-time
-#    2023-05-06T10:34:49+09:00
-# : end-time
-#    2023-05-06T10:39:49+09:00
-# : theme
-#    default
+: author
+  unasuke (Yusuke Nakamura)
+: content-source
+  RubyKaigi 2023
+: date
+  2023-05-12
+: theme
+  theme
 
-= 最初のスライド
+= Self introduction
 
-  * 項目1
-  * 項目2
-  * 項目3
+  * Name: unasuke (Yusuke Nakamura)
+  * Work: freelance Web app developer @ Japan
+  * Itamae gem maintainer, Kaigi on Rails Organizer
+  * (('tag:x-small')) GitHub ((<URL:https://github.com/unasuke>))
+  * (('tag:x-small')) Mastodon ((<URL:https://mstdn.unasuke.com/@unasuke>))
+  * (('tag:x-small')) Twitter ((<URL:https://twitter.com/yu_suke1994>))
 
-= 二番目のスライド
 
   # image
-  # src = https://raw.github.com/rabbit-shocker/rabbit/master/sample/lavie.png
-  # relative_height = 100
+  # src = img/icon_face.jpeg
+  # relative_width = 24
+  # align = right
+  # relative_margin_right = -8
+  # relative_margin_top = 33
+
+= [AD 1] Rubyist Book Authors Stamp Rally
+  # image
+  # src = img/authorsrb.jpg
+  # relative_width = 85
+
+= [AD 2] RubyMusicMixin2023 by pixiv at Day 3
+  # image
+  # src = img/rubymusicmixin2023.jpg
+  # relative_width = 80
+
+= Ruby Association Grant
+  # image
+  # src = img/ruby-association-grant-2022-unasuke.png
+  # relative_width = 90
+
+(('tag:small'))(('tag:center'))((<URL:https://www.ruby.or.jp/en/news/20221027>))
+
+= What is QUIC?
+* UDP-based communication protocol
+* HTTP/3 uses QUIC
+  * Faster than HTTP/2 (TCP)
+
+\n
+  # image
+  # src = img/QUIC-Badge-Dark-RGB-Horiz.png
+  # relative_width = 50
+  # align = center
+(('tag:x-small'))(('tag:center')) image from ((<URL:https://github.com/quicwg/wg-materials>))
+
+
+= What is QUIC? - Diagram by Robin Marx
+  # image
+  # src = img/protocol-stack-h2-h3-improved-readability.png
+  # relative_width = 45
+  # align = center
+
+(('tag:x-small'))(('tag:center')) image from ((<URL:https://github.com/rmarx/h3-protocol-stack>))
+
+= My talks
+* RubyKaigi Takeout 2021
+  * "Ruby, Ractor, QUIC"
+* RubyKaigi 2022 (Tsu)
+  * "Ruby, Ractor, QUIC"
+* Now (2023, Matsumoto)
+
+\n
+  # image
+  # src = img/past-kaigi-slides.png
+  # relative_width = 40
+  # align = right
+
+
+= Implement QUIC from scratch
+(('tag:center'))Have you ever created a Rails application?
+
+  # image
+  # src = img/person-raising-hand.svg
+  # relative_width = 30
+  # align = center
+
+= Implement QUIC from scratch
+(('tag:center'))Have you ever implemented the QUIC protocol?
+
+  # image
+  # src = img/person-raising-hand.svg
+  # relative_width = 30
+  # align = center
+
+
+= Implement QUIC from scratch
+It's too dificult! \n
+
+* When create a Rails application
+  * learn from "Rails Guides" and "Rails Tutorial"
+* When create a QUIC implementation...?
+  * RFCs are not a "implementation guide"
+
+= Try to implement QUIC once
+
+* To learn how to implement QUIC
+  * Implement it once (how?)
+    * Porting existing implementation!
+
+
+= Topics
+
+(1) (('tag:large'))Porting from Python to Ruby
+(2) (('tag:large'))Rubyish QUIC implementation
+(3) (('tag:large'))Future of my implementation
+
+
+= Porting from Python to Ruby
+  # image
+  # src = img/to-ruby-from-python.png
+  # relative_width = 78
+  # align = center
+(('tag:xx-small'))(('tag:center'))((<URL:https://www.ruby-lang.org/en/documentation/ruby-from-other-languages/to-ruby-from-python/>))
+
+= Porting from Python to Ruby
+  # image
+  # src = img/python_easy_code.png
+  # relative_width = 80
+  # align = center
+
+(('tag:center'))Can you port this Python code to Ruby?
+
+= Porting from Python to Ruby - Code amount
+  # image
+  # src = img/aioquic-loc.png
+  # relative_width = 100
+  # align = center
+
+= Porting from Python to Ruby - How I ported it
+* Keep the same structure as Python
+  * Carelessly changed may cause getting stuck
+* Avoid porting asynchronous processing parts 
+  * Difference of functionality
+  * My lack of knowledge
+
+= Porting from Python to Ruby - Built-in types, bytes
+  # image
+  # src = img/aioquic_buffer.png
+  # relative_width = 100
+  # align = center
+
+(('tag:x-small'))(('tag:center'))((<URL:https://github.com/aiortc/aioquic/blob/main/src/aioquic/_buffer.pyi>))
+
+= Porting from Python to Ruby - Built-in types, bytes
+
+* bytes in Python
+  * immutable (bytearray is not)
+* String in Ruby
+  * mutable
+  * has Encoding (not only ASCII)
+
+= Porting from Python to Ruby - Built-in types, bytes
+Python returns 3
+  # image
+  # src = img/bytes_python.png
+  # relative_width = 60
+  # align = center
+
+Ruby returns 1 (return 3 if use String#bytesize)
+  # image
+  # src = img/bytes_ruby.png
+  # relative_width = 60
+  # align = center
+
+= Porting from Python to Ruby - Built-in types, enum
+  # image
+  # src = img/enum_python.png
+  # relative_width = 80
+  # align = center
+
+(('tag:center')) Python
+
+
+= Porting from Python to Ruby - Built-in types, enum
+  # image
+  # src = img/enum_ruby.png
+  # relative_width = 80
+  # align = center
+
+(('tag:center')) Ruby
+
+= Porting from Python to Ruby - Built-in types, enum
+  # image
+  # src = img/enum_python_debug.png
+  # relative_width = 80
+  # align = center
+
+"Oh! 1025 is the SignatureAlgorithm.RSA_PKCS1_SHA256 in TLS 1.3!"
+
+= Porting from Python to Ruby - Built-in types, tuple
+  # image
+  # src = img/aioquic_conn.png
+  # relative_width = 90
+  # align = center
+
+(('tag:center')) Python
+
+= Porting from Python to Ruby - Built-in types, tuple
+  # image
+  # src = img/raioquic_conn.png
+  # relative_width = 90
+  # align = center
+
+(('tag:center')) Ruby
+
+= Porting from Python to Ruby - Code style
+  # image
+  # src = img/aioquic_callback.png
+  # relative_width = 70
+  # align = center
+
+(('tag:center')) Python
+
+= Porting from Python to Ruby - Code style
+  # image
+  # src = img/raioquic_callback.png
+  # relative_width = 75
+  # align = center
+
+(('tag:center')) Ruby
+
+= Porting from Python to Ruby - Code style
+  # image
+  # src = img/aioquic_callback_register.png
+  # relative_width = 80
+  # align = center
+
+(('tag:center')) callback register in Python
+
+
+= Porting from Python to Ruby - Library API
+Not only language themselves but also API differences.
+
+Using OpenSSL functionality from...
+
+* Python (aioquic)
+  * pyca/cryptography
+    * ((<URL:https://github.com/pyca/cryptography>))
+* Ruby
+  * openssl gem
+    * ((<URL:https://github.com/ruby/openssl>))
+
+(to implement TLS 1.3)
+
+= Porting from Python to Ruby - Library API
+(1) looked for API calls to pyca/cryptography's
+(2) find which C API of OpenSSL it corresponds to
+(3) find how it is wrapped in the openssl gem
+(4) port it to a Ruby API call in the openssl gem
+
+= Porting from Python to Ruby - Library API example
+  # image
+  # src = img/key_exchange_python.png
+  # relative_width = 100
+  # align = center
+
+= Porting from Python to Ruby - Library API example
+  # image
+  # src = img/key_exchange_ruby.png
+  # relative_width = 90
+  # align = center
+
+= Porting from Python to Ruby - Result
+  # image
+  # src = img/raioquic-loc.png
+  # relative_width = 90
+  # align = center
+
+= Porting from Python to Ruby - Demo
+  # image
+  # src = img/raioquic-demo.gif
+  # relative_width = 85
+  # align = center
+
+= Porting from Python to Ruby - Insights
+
+(1) QUIC IS VERY DIFFICULT
+(2) TLS 1.3 IS ALSO VERY DIFFICULT
+(3) "writing once" empowers me
+
+= Porting from Python to Ruby - "Raioquic"
+  # image
+  # src = img/raioquic-og.png
+  # relative_width = 80
+  # align = center
+
+(('tag:center'))((<URL:https://github.com/unasuke/raioquic>))
+
+
+= Rubyish QUIC implementation
+  # image
+  # src = img/raioquic_demo_client.png
+  # relative_width = 44
+  # align = center
+
+= Future of my implementation - How to make it Rubyish?
+To make implementation Rubyish...
+
+(1) Use suitable features to Ruby (internal)
+    * tuple → class or dedicated struct or data
+    * bytes → IO::Buffer, not String
+(2) Adapt to existing API styles (public API)
+
+= Future of my implementation - TLS in Ruby
+  # image
+  # src = img/ruby_nethttp.png
+  # relative_width = 90
+  # align = center
+
+(('tag:center'))High level API (use Net::HTTP)
+
+= Future of my implementation - TLS in Ruby
+  # image
+  # src = img/ruby_openssl_socket.png
+  # relative_width = 90
+  # align = center
+
+(('tag:center'))Low level API (use OpenSSL::SSL::SSLSocket)
+
+= Future of my implementation - Faraday style
+  # image
+  # src = img/faraday_like_api.png
+  # relative_width = 90
+  # align = center
+
+(('tag:center'))Very high level API
+
+= Future of my implementation - Net::HTTP style
+  # image
+  # src = img/similer_nethttp.png
+  # relative_width = 90
+  # align = center
+
+(('tag:center'))Net::HTTP style API
+
+= Future of my implementation - Vaporware
+* The APIs like I've been talking about, doesn't exist yet
+  * next year...?
+    * um...
+
+= Future of my implementation - Rais your hand time!
+(('tag:center'))Are you running some Rails apps on production env?
+
+  # image
+  # src = img/person-raising-hand.svg
+  # relative_width = 30
+  # align = center
+
+= Future of my implementation - Rais your hand time!
+(('tag:center'))Are you running some Rails apps on production ((*without*)) reverse proxies or load balancers?
+
+  # image
+  # src = img/person-raising-hand.svg
+  # relative_width = 30
+  # align = center
+
+# = Future of my implementation - Where could it be used
+# 
+# * Are you runs Rails app on production?
+#   * Are you use reverce proxy or load balancer?
+#     * e.g. Nginx, Apache, H2O, ALB...
+# 
+
+= Future of my implementation - Speed!
+
+* Most Rails app is behind of web server (load balancer)
+  * TLS termination is high cost
+  * (asset delivery)
+
+= Future of my implementation - QUIC diagram (again!)
+  # image
+  # src = img/protocol-stack-h2-h3-improved-readability.png
+  # relative_width = 45
+  # align = center
+
+(('tag:x-small'))(('tag:center')) image from ((<URL:https://github.com/rmarx/h3-protocol-stack>))
+
+= Future of my implementation - Faster language impls
+* C or Rust or...
+  * ((<(('socketry/protocol-quic'))|URL:https://github.com/socketry/protocol-quic>)) gem wraps ngtcp2
+    * created by Samuel-san (ioquatix)
+      * "Unleashing the Power of Asynchronous HTTP with Ruby" in Day 3
+  * ((<(('ngtcp2/ngtcp2'))|URL:https://github.com/ngtcp2/ngtcp2>)) written by C
+
+= Future of my implementation - ngtcp2 used by curl
+  # image
+  # src = img/curl-ngtcp2.png
+  # relative_width = 85
+  # align = center
+
+(('tag:center'))((<URL:https://github.com/curl/curl/blob/master/docs/HTTP3.md>))
+
+= Future of my implementation - Worth of Pure Ruby
+* Research
+  * Implementations that make it easy to change internal behavior are useful
+* QUIC implementation itself
+  * Helping QUIC implementation itself
+    * e.g. Build data for test its behavior
+
+= Future of my implementation - Motivation
+  # image
+  # src = img/quic-impl-grep-ruby.png
+  # relative_width = 70
+  # align = center
+
+(('tag:x-small'))(('tag:center')) ((<URL:https://github.com/quicwg/base-drafts/wiki/Implementations>))
+
+= Summary
+
+* Ported aioquic (Python) to Ruby
+  * Diffs from language feature, library API maked porting hard
+  * Ported impl could communicate other impls
+* Creating Rubyish implementation
+  * Uses Ruby's built-in features
+  * Make it can apply existing idioms
+* This may be where this implementation would be useful
+  * Research
+  * QUIC implementation itself
+
+= Acknowledgments
+* Ruby Association
+  * For adopting my project
+* Koichi Sasada-san
+  * a mentor of the porting project
+* Kuwayama-san
+  * Author of tttls1.3 gem
+* Daisuke Aritomo a.k.a. osyoyu
+  * Adviser of this talk
