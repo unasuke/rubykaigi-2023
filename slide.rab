@@ -96,7 +96,7 @@
 
 
 = Implement QUIC from scratch
-It's too dificult! \n
+It's too difficult! \n
 
 * When create a Rails application
   * learn from "Rails Guides" and "Rails Tutorial"
@@ -350,7 +350,7 @@ To make implementation Rubyish...
   * next year...?
     * um...
 
-= Future of my implementation - Rais your hand time!
+= Future of my implementation - Raise your hand time!
 (('tag:center'))Are you running some Rails apps on production env?
 
   # image
@@ -358,7 +358,7 @@ To make implementation Rubyish...
   # relative_width = 30
   # align = center
 
-= Future of my implementation - Rais your hand time!
+= Future of my implementation - Raise your hand time!
 (('tag:center'))Are you running some Rails apps on production ((*without*)) reverse proxies or load balancers?
 
   # image
@@ -369,7 +369,7 @@ To make implementation Rubyish...
 # = Future of my implementation - Where could it be used
 # 
 # * Are you runs Rails app on production?
-#   * Are you use reverce proxy or load balancer?
+#   * Are you use reverse proxy or load balancer?
 #     * e.g. Nginx, Apache, H2O, ALB...
 # 
 
@@ -420,7 +420,7 @@ To make implementation Rubyish...
 = Summary
 
 * Ported aioquic (Python) to Ruby
-  * Diffs from language feature, library API maked porting hard
+  * Diffs from language features, library API makes porting hard
   * Ported impl could communicate other impls
 * Creating Rubyish implementation
   * Uses Ruby's built-in features
